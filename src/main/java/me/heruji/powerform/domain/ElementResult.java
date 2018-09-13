@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Set;
 
+/**
+ * 反馈项
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ElementResult {
     private String elemKey;

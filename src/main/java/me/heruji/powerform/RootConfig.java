@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:conf/db.properties")
-@ComponentScan({"me.heruji.powerform.dao", "me.heruji.powerform.service", "me.heruji.powerform.utils"})
+@ComponentScan({"me.heruji.powerform.dao", "me.heruji.powerform.service"})
 public class RootConfig {
     @Autowired
     private Environment env;

@@ -12,13 +12,23 @@ import java.util.List;
 
 @Repository
 public class FormRepositoryImpl implements FormRepository {
+    // 项form表插入记录
     private static final String INSERT_FORM = "INSERT INTO form VALUES (?, ?)";
+
+    // 项form_element表插入记录
     private static final String INSERT_ELEM = "INSERT INTO form_element VALUES (NULL, ?, ?, ? ,?, ?, ?, ?, ?)";
+
+    // 向option表插入记录
     private static final String INSERT_OPTION = "INSERT INTO `option` VALUES (?, ?, ?, ?)";
+
+    // 根据表单id查询表单项
     private static final String SELECT_ELEMS_BY_FORM_ID =
             "SELECT * FROM form_element WHERE form_id = ? ORDER BY `order`";
+
+    // 根据表单项id查询选项
     private static final String SELECT_OPTIONS_BY_ELEM_ID =
             "SELECT * FROM `option` WHERE elem_id = ? ORDER BY `order`";
+
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -28,15 +38,17 @@ public class FormRepositoryImpl implements FormRepository {
 
     @Override
     public void add(Form form) {
+        // 向form表插入记录
         jdbcTemplate.update(INSERT_FORM, form.getId(), form.getCreateTime());
+
+        // 项form_element表插入记录
         List<FormElement> formElements = form.getFormElements();
         for (int i = 0; i < formElements.size(); i++) {
             FormElement element = formElements.get(i);
-            List<Option> options = element.getOptions();
             jdbcTemplate.update(
                     INSERT_ELEM,
                     form.getId(),
-                    i,
+                    i, // order
                     element.getElemKey(),
                     element.getTitle(),
                     element.getHint(),
@@ -44,7 +56,10 @@ public class FormRepositoryImpl implements FormRepository {
                     element.getMultiLine(),
                     element.getSingleSelect()
             );
+            // 若有选项, 则向option表插入记录
+            List<Option> options = element.getOptions();
             if (options != null) {
+                // 获取表单项的id
                 Long elementId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
                 for (int j = 0; j < options.size(); j++) {
                     Option option = options.get(j);
@@ -53,7 +68,7 @@ public class FormRepositoryImpl implements FormRepository {
                             option.getId(),
                             elementId,
                             option.getTitle(),
-                            j
+                            j // order
                     );
                 }
             }
@@ -62,6 +77,7 @@ public class FormRepositoryImpl implements FormRepository {
 
     @Override
     public List<FormElement> getFormElementsByFormId(String formId) {
+        // 根据表单id查询表单项
         List<FormElement> formElements = jdbcTemplate.query(SELECT_ELEMS_BY_FORM_ID, (rs, rowNum) -> {
             FormElement formElement = new FormElement();
             formElement.setId(rs.getLong("id"));
@@ -74,6 +90,7 @@ public class FormRepositoryImpl implements FormRepository {
             return formElement;
         }, formId);
 
+        // 根据表单项id查询选项
         for (FormElement element : formElements) {
             List<Option> options = jdbcTemplate.query(SELECT_OPTIONS_BY_ELEM_ID, (rs, rowNum) -> {
                 Option option = new Option();

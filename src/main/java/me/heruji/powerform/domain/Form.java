@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 表单
+ */
 public class Form {
     private String id;
     @JsonIgnore

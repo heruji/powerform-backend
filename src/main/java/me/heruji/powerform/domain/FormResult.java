@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.Set;
 
+/**
+ * 表单反馈
+ */
 public class FormResult {
     @JsonIgnore
     private Long id;

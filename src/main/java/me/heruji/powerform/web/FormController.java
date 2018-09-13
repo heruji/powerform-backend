@@ -27,26 +27,55 @@ public class FormController {
         this.formService = formService;
     }
 
+    /**
+     * 创建表单
+     *
+     * @param formElements 表单元素
+     * @return 表单
+     */
     @PostMapping
     public Form createForm(@RequestBody List<FormElement> formElements) {
         return formService.createForm(formElements);
     }
 
+    /**
+     * 获取表单元素
+     *
+     * @param formId 表单id
+     * @return 表单元素
+     */
     @GetMapping("/{formId}/element")
     public List<FormElement> getFormElements(@PathVariable String formId) {
         return formService.getFormElements(formId);
     }
 
+    /**
+     * 创建表单反馈
+     *
+     * @param formId 表单id
+     * @param elementResults 表单反馈
+     */
     @PostMapping("/{formId}/result")
     public void createFormResult(@PathVariable String formId, @RequestBody Set<ElementResult> elementResults) {
         formService.createFormResult(formId, elementResults);
     }
 
+    /**
+     * 获取表单反馈
+     *
+     * @param formId 表单id
+     * @return 表单反馈
+     */
     @GetMapping("/{formId}/result")
     public List<FormResult> getFormResults(@PathVariable String formId) {
         return formService.getFormResults(formId);
     }
 
+    /**
+     * 以xlsx格式导出表单反馈
+     *
+     * @param formId 表单id
+     */
     @GetMapping("/{formId}/result/xlsx")
     public void exportXlsx(@PathVariable String formId,
                            HttpServletRequest request,

@@ -1,5 +1,8 @@
 package me.heruji.powerform.domain;
 
+/**
+ * 表单选项
+ */
 public class Option {
     private String id;
     private String title;
